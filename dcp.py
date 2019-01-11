@@ -30,7 +30,7 @@ def get_param(s, src, target, param):
     param = params[param]
     
     block = PNDCPBlockRequest(param[0], param[1], 0, bytes())
-    dcp   = PNDCPHeader(0xfefd, PNDCPHeader.GET, PNDCPHeader.REQUEST, 0x012345, 0, 2, block)
+    dcp   = PNDCPHeader(0xfefd, PNDCPHeader.GET, PNDCPHeader.REQUEST, 0x012345, 192, 2, block)
     eth   = EthernetVLANHeader(dst, src, 0x8100, 0, PNDCPHeader.ETHER_TYPE, dcp)
     
     s.send(bytes(eth))
@@ -60,7 +60,7 @@ def set_param(s, src, target, param, value):
 def send_discover(s, src):
     
     block = PNDCPBlockRequest(0xFF, 0xFF, 0, bytes())
-    dcp   = PNDCPHeader(0xfefe, PNDCPHeader.IDENTIFY, PNDCPHeader.REQUEST, 0x012345, 0, len(block), payload=block)
+    dcp   = PNDCPHeader(0xfefe, PNDCPHeader.IDENTIFY, PNDCPHeader.REQUEST, 0x012345, 192, len(block), payload=block)
     eth   = EthernetVLANHeader(s2mac("01:0e:cf:00:00:00"), src, 0x8100, 0, PNDCPHeader.ETHER_TYPE, payload=dcp)
     
     s.send(bytes(eth))
@@ -69,7 +69,7 @@ def send_discover(s, src):
 def send_request(s, src, t, value):
     
     block = PNDCPBlockRequest(t[0], t[1], len(value), bytes(value))
-    dcp   = PNDCPHeader(0xfefe, PNDCPHeader.IDENTIFY, PNDCPHeader.REQUEST, 0x012345, 0, len(block), block)
+    dcp   = PNDCPHeader(0xfefe, PNDCPHeader.IDENTIFY, PNDCPHeader.REQUEST, 0x012345, 192, len(block), block)
     eth   = EthernetVLANHeader(s2mac("01:0e:cf:00:00:00"), src, 0x8100, 0, PNDCPHeader.ETHER_TYPE, dcp)
     
     s.send(bytes(eth))
