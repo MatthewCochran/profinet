@@ -37,6 +37,15 @@ def s2ip(i):
 def decode_bytes(s):
     return s.decode()
 
+def ensure_min_packet_size(payload):
+    data = list(bytes(payload))
+    ETH_HEADER_SIZE = 18
+    ETH_MIN_PACKET_SIZE = 64
+    bytes_to_fulfill_min_packet_size = max(0, ETH_MIN_PACKET_SIZE - ETH_HEADER_SIZE - len(data))
+    data += [0 for x in range(bytes_to_fulfill_min_packet_size)]
+    return data
+
+
 class max_timeout(object):
     def __init__(self, seconds):
         self.seconds = seconds
