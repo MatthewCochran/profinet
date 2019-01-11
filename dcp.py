@@ -39,13 +39,18 @@ def get_param(s, src, target, param):
 
 def set_param(s, src, target, param, value):
     dst = s2mac(target)
+    if param == 'ip':
+        # ToDo: prase from value
+        value = s2ip_bytes('192.168.201.51') + s2ip_bytes('255.255.255.0') + s2ip_bytes('0.0.0.0')
+    else:
+        value = bytes(value, encoding='ascii')
     
     if param not in params.keys():
         return
     
     param = params[param]
     
-    block = PNDCPBlockRequest(param[0], param[1], len(value) + 2, bytes([0x00, 0x00]) + bytes(value, encoding='ascii'))
+    block = PNDCPBlockRequest(param[0], param[1], len(value) + 2, bytes([0x00, 0x00]) + value)
     dcp   = PNDCPHeader(0xfefd, PNDCPHeader.SET, PNDCPHeader.REQUEST, 0x012345, 0, len(value) + 6 + (1 if len(value) % 2 == 1 else 0), block)
     eth   = EthernetVLANHeader(dst, src, 0x8100, 0, PNDCPHeader.ETHER_TYPE, payload=ensure_min_packet_size(dcp))
     

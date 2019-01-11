@@ -34,6 +34,9 @@ def udp_socket(host, port):
 def s2ip(i):
     return '.'.join(str(o) for o in i)
 
+def s2ip_bytes(s):
+    return bytes([int(num) for num in s.split('.')])
+
 def decode_bytes(s):
     return s.decode()
 
